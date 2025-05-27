@@ -9,7 +9,7 @@ interface MazeGridProps {
 }
 
 export const MazeGrid: React.FC<MazeGridProps> = ({ maze, isAnimating = false }) => {
-  if (!maze || !maze.length || !maze[0] || !maze[0].length) {
+  if (!maze.length) {
     return (
       <div className="flex items-center justify-center h-96 w-96 bg-gray-100 rounded-lg">
         <div className="text-gray-500">Loading maze...</div>
@@ -38,8 +38,7 @@ export const MazeGrid: React.FC<MazeGridProps> = ({ maze, isAnimating = false })
     }
   };
 
-  const maxSize = 400;
-  const cellSize = Math.min(maxSize / maze.length, maxSize / maze[0].length, 20);
+  const cellSize = Math.min(400 / maze.length, 400 / maze[0].length);
 
   return (
     <div 
