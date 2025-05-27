@@ -2,13 +2,11 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { MazeGrid } from '@/components/MazeGrid';
 import { AlgorithmExplanation } from '@/components/AlgorithmExplanation';
 import { MazeStats } from '@/components/MazeStats';
 import { generateMaze, solveMazeWithDFS } from '@/utils/mazeUtils';
-import { CellType, Position, MazeStats as MazeStatsType } from '@/types/maze';
+import { CellType, MazeStats as MazeStatsType } from '@/types/maze';
 
 const Index = () => {
   const [maze, setMaze] = useState<CellType[][]>([]);
@@ -26,20 +24,30 @@ const Index = () => {
     setIsGenerating(true);
     setStats({ pathLength: 0, cellsVisited: 0, backtrackCount: 0, solutionFound: false });
     
-    // Simulate generation delay for better UX
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    const newMaze = generateMaze(mazeSize.rows, mazeSize.cols);
-    setMaze(newMaze);
-    setIsGenerating(false);
+    try {
+      // Simulate generation delay for better UX
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      const newMaze = generateMaze(mazeSize.rows, mazeSize.cols);
+      setMaze(newMaze);
+    } catch (error) {
+      console.error('Error generating maze:', error);
+    } finally {
+      setIsGenerating(false);
+    }
   }, [mazeSize]);
 
   const handleSolveMaze = useCallback(async () => {
-    if (maze.length === 0) return;
+    if (!maze || maze.length === 0) return;
     
     setIsSolving(true);
-    const result = await solveMazeWithDFS(maze, setMaze, setStats);
-    setIsSolving(false);
+    try {
+      await solveMazeWithDFS(maze, setMaze, setStats);
+    } catch (error) {
+      console.error('Error solving maze:', error);
+    } finally {
+      setIsSolving(false);
+    }
   }, [maze]);
 
   // Generate initial maze on component mount
@@ -71,12 +79,20 @@ const Index = () => {
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-red-500 rounded"></div>
+                <span className="text-sm">Red - Start position</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 bg-purple-500 rounded"></div>
+                <span className="text-sm">Purple - End position</span>
+              </div>
+              <div className="flex items-center gap-2">
                 <div className="w-4 h-4 bg-blue-400 rounded"></div>
-                <span className="text-sm">Blue - Visited path by DFS</span>
+                <span className="text-sm">Blue - Visited cells</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 bg-green-500 rounded"></div>
-                <span className="text-sm">Green - Final path from start to end</span>
+                <span className="text-sm">Green - Solution path</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-4 h-4 bg-black rounded"></div>
@@ -93,7 +109,7 @@ const Index = () => {
         {/* Instructions */}
         <div className="text-center">
           <p className="text-gray-600 italic">
-            Click "Generate New Maze" to create a new puzzle!
+            Click "Generate New Maze" to create a new puzzle, then "Solve Maze" to watch DFS in action!
           </p>
         </div>
 
@@ -109,7 +125,7 @@ const Index = () => {
           </Button>
           <Button 
             onClick={handleSolveMaze}
-            disabled={isSolving || isGenerating || maze.length === 0}
+            disabled={isSolving || isGenerating || !maze || maze.length === 0}
             variant="outline"
             size="lg"
             className="border-green-600 text-green-600 hover:bg-green-50"
@@ -126,7 +142,7 @@ const Index = () => {
               <CardHeader>
                 <CardTitle>Maze Visualization</CardTitle>
                 <CardDescription>
-                  {maze.length > 0 ? `${mazeSize.rows} × ${mazeSize.cols} maze` : 'Loading maze...'}
+                  {maze && maze.length > 0 ? `${mazeSize.rows} × ${mazeSize.cols} maze` : 'Loading maze...'}
                 </CardDescription>
               </CardHeader>
               <CardContent className="flex justify-center">

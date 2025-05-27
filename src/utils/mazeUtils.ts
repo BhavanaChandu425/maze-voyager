@@ -2,9 +2,13 @@
 import { CellType, Position, DFSResult, MazeStats } from '@/types/maze';
 
 export const generateMaze = (rows: number, cols: number): CellType[][] => {
+  // Ensure odd dimensions for proper maze generation
+  const mazeRows = rows % 2 === 0 ? rows + 1 : rows;
+  const mazeCols = cols % 2 === 0 ? cols + 1 : cols;
+  
   // Create initial maze filled with walls
-  const maze: CellType[][] = Array(rows).fill(null).map(() => 
-    Array(cols).fill('wall' as CellType)
+  const maze: CellType[][] = Array(mazeRows).fill(null).map(() => 
+    Array(mazeCols).fill('wall' as CellType)
   );
   
   // Recursive backtracking maze generation
@@ -26,8 +30,8 @@ export const generateMaze = (rows: number, cols: number): CellType[][] => {
       const newRow = row + dRow;
       const newCol = col + dCol;
       
-      if (newRow >= 0 && newRow < rows && 
-          newCol >= 0 && newCol < cols && 
+      if (newRow >= 0 && newRow < mazeRows && 
+          newCol >= 0 && newCol < mazeCols && 
           maze[newRow][newCol] === 'wall') {
         
         // Carve path between current and new cell
@@ -38,17 +42,19 @@ export const generateMaze = (rows: number, cols: number): CellType[][] => {
   };
   
   // Start carving from (1,1) to ensure odd coordinates
-  carve(1, 1);
+  if (mazeRows > 1 && mazeCols > 1) {
+    carve(1, 1);
+  }
   
   // Ensure start and end are accessible
   maze[0][0] = 'path'; // Start
-  maze[rows - 1][cols - 1] = 'path'; // End
+  maze[mazeRows - 1][mazeCols - 1] = 'path'; // End
   
   // Clear path to start and end if needed
-  maze[0][1] = 'path';
-  maze[1][0] = 'path';
-  maze[rows - 2][cols - 1] = 'path';
-  maze[rows - 1][cols - 2] = 'path';
+  if (mazeRows > 1) maze[1][0] = 'path';
+  if (mazeCols > 1) maze[0][1] = 'path';
+  if (mazeRows > 2) maze[mazeRows - 2][mazeCols - 1] = 'path';
+  if (mazeCols > 2) maze[mazeRows - 1][mazeCols - 2] = 'path';
   
   return maze;
 };
@@ -60,7 +66,18 @@ export const solveMazeWithDFS = async (
 ): Promise<DFSResult> => {
   const rows = initialMaze.length;
   const cols = initialMaze[0].length;
+  
+  // Create a copy of the maze for visualization
   const maze = initialMaze.map(row => [...row]);
+  
+  // Reset any previous visualization
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
+      if (maze[i][j] === 'visited' || maze[i][j] === 'solution' || maze[i][j] === 'current') {
+        maze[i][j] = 'path';
+      }
+    }
+  }
   
   const visited = Array(rows).fill(null).map(() => Array(cols).fill(false));
   const path: Position[] = [];
@@ -71,7 +88,7 @@ export const solveMazeWithDFS = async (
   const isValid = (row: number, col: number): boolean => {
     return row >= 0 && row < rows && 
            col >= 0 && col < cols && 
-           (maze[row][col] === 'path' || maze[row][col] === 'visited') && 
+           maze[row][col] === 'path' && 
            !visited[row][col];
   };
   
@@ -87,7 +104,7 @@ export const solveMazeWithDFS = async (
     }
     
     // Update maze and stats
-    setMaze([...maze]);
+    setMaze(maze.map(row => [...row]));
     setStats({
       pathLength: path.length,
       cellsVisited: allVisited.length,
@@ -96,7 +113,7 @@ export const solveMazeWithDFS = async (
     });
     
     // Add delay for visualization
-    await new Promise(resolve => setTimeout(resolve, 50));
+    await new Promise(resolve => setTimeout(resolve, 100));
     
     // Check if we reached the end
     if (row === rows - 1 && col === cols - 1) {
@@ -130,7 +147,7 @@ export const solveMazeWithDFS = async (
       solutionFound: false
     });
     
-    await new Promise(resolve => setTimeout(resolve, 30));
+    await new Promise(resolve => setTimeout(resolve, 50));
     
     return false;
   };
@@ -150,7 +167,7 @@ export const solveMazeWithDFS = async (
     maze[0][0] = 'start';
     maze[rows - 1][cols - 1] = 'end';
     
-    setMaze([...maze]);
+    setMaze(maze.map(row => [...row]));
   }
   
   // Final stats update
