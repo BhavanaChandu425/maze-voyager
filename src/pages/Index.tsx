@@ -71,11 +71,25 @@ const Index = () => {
       ...prev,
       steps,
       currentStep: 0,
-      isRunning: true,
+      isRunning: false,
       isPaused: false
     }));
     
-    setStats(prev => ({ ...prev, totalSteps: steps.length }));
+    setStats(prev => ({ ...prev, totalSteps: steps.length, currentStep: 0 }));
+    
+    // Set the initial maze state and stats for the first step
+    if (steps.length > 0) {
+      const firstStep = steps[0];
+      setMaze(firstStep.maze);
+      setStats(prevStats => ({
+        ...prevStats,
+        currentStep: 0,
+        pathLength: firstStep.stack.length,
+        cellsVisited: 1,
+        backtrackCount: 0,
+        totalSteps: steps.length
+      }));
+    }
   }, [maze]);
 
   const playSteps = useCallback(() => {
@@ -321,13 +335,11 @@ const Index = () => {
           <div className="space-y-6">
             <MazeStats stats={stats} />
             
-            {algorithmState.steps.length > 0 && (
-              <DFSTraversalLog
-                currentStep={currentStep}
-                allSteps={algorithmState.steps}
-                currentStepIndex={algorithmState.currentStep}
-              />
-            )}
+            <DFSTraversalLog
+              currentStep={currentStep}
+              allSteps={algorithmState.steps}
+              currentStepIndex={algorithmState.currentStep}
+            />
             
             <AlgorithmExplanation />
           </div>

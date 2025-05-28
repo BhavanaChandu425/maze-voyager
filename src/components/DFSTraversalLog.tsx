@@ -68,6 +68,10 @@ export const DFSTraversalLog: React.FC<DFSTraversalLogProps> = ({
     return `(${pos.row}, ${pos.col})`;
   };
 
+  const formatStackPositions = (stack: Position[]): string => {
+    return stack.map(pos => formatPosition(pos)).join(' → ');
+  };
+
   const traversalLog = generateTraversalLog();
 
   return (
@@ -79,14 +83,19 @@ export const DFSTraversalLog: React.FC<DFSTraversalLogProps> = ({
         </CardHeader>
         <CardContent>
           {currentStep ? (
-            <div className="space-y-2">
-              <div className="text-sm font-medium text-gray-700">
-                Current: {formatPosition(currentStep.position)}
+            <div className="space-y-3">
+              <div className="text-sm">
+                <div className="font-medium text-gray-700 mb-1">
+                  Current Position: {formatPosition(currentStep.position)}
+                </div>
+                <div className="text-gray-600">
+                  Stack Path: {formatStackPositions(currentStep.stack)}
+                </div>
               </div>
               
               {currentStep.availablePaths.length > 0 && (
                 <div className="space-y-1">
-                  <div className="text-sm font-medium text-gray-700">Available paths:</div>
+                  <div className="text-sm font-medium text-gray-700">Available paths from {formatPosition(currentStep.position)}:</div>
                   <div className="ml-4 space-y-1">
                     {currentStep.availablePaths.map((path, index) => (
                       <div key={index} className="text-sm text-blue-600">
@@ -99,7 +108,7 @@ export const DFSTraversalLog: React.FC<DFSTraversalLogProps> = ({
               
               <div className="space-y-1">
                 <div className="text-sm font-medium text-gray-700">
-                  Stack ({currentStep.stack.length} positions):
+                  Stack Details ({currentStep.stack.length} positions):
                 </div>
                 <div className="ml-4 space-y-1 max-h-32 overflow-y-auto">
                   {currentStep.stack.slice().reverse().map((pos, index) => (
@@ -139,7 +148,7 @@ export const DFSTraversalLog: React.FC<DFSTraversalLogProps> = ({
                       entry.type === 'backtrack' ? 'destructive' :
                       'default'
                     }
-                    className="text-xs"
+                    className="text-xs min-w-16"
                   >
                     {entry.type === 'start' ? 'START' :
                      entry.type === 'visit' ? 'VISIT' :
