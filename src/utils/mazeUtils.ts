@@ -1,5 +1,4 @@
-
-import { CellType, Position, DFSResult, MazeStats } from '@/types/maze';
+import { CellType, Position, DFSResult, MazeStats, DFSStep } from '@/types/maze';
 
 export const generateMaze = (rows: number, cols: number): CellType[][] => {
   // Create initial maze filled with walls
@@ -53,6 +52,107 @@ export const generateMaze = (rows: number, cols: number): CellType[][] => {
   return maze;
 };
 
+export const generateDFSSteps = (initialMaze: CellType[][]): DFSStep[] => {
+  const rows = initialMaze.length;
+  const cols = initialMaze[0].length;
+  const maze = initialMaze.map(row => [...row]);
+  
+  const visited = Array(rows).fill(null).map(() => Array(cols).fill(false));
+  const stack: Position[] = [];
+  const steps: DFSStep[] = [];
+  let found = false;
+  
+  const isValid = (row: number, col: number): boolean => {
+    return row >= 0 && row < rows && 
+           col >= 0 && col < cols && 
+           (maze[row][col] === 'path') && 
+           !visited[row][col];
+  };
+  
+  const getAvailablePaths = (row: number, col: number): Position[] => {
+    const directions = [[-1, 0], [0, 1], [1, 0], [0, -1]];
+    const available: Position[] = [];
+    
+    for (const [dRow, dCol] of directions) {
+      const newRow = row + dRow;
+      const newCol = col + dCol;
+      
+      if (isValid(newRow, newCol)) {
+        available.push({ row: newRow, col: newCol });
+      }
+    }
+    
+    return available;
+  };
+  
+  const dfs = (row: number, col: number): boolean => {
+    visited[row][col] = true;
+    stack.push({ row, col });
+    
+    if (!(row === 0 && col === 0) && !(row === rows - 1 && col === cols - 1)) {
+      maze[row][col] = 'visited';
+    }
+    
+    const availablePaths = getAvailablePaths(row, col);
+    const isDecisionPoint = availablePaths.length > 1;
+    
+    // Mark decision points
+    if (isDecisionPoint && !(row === 0 && col === 0) && !(row === rows - 1 && col === cols - 1)) {
+      maze[row][col] = 'decision';
+    }
+    
+    // Record step
+    steps.push({
+      position: { row, col },
+      stack: [...stack],
+      action: isDecisionPoint ? 'decision' : 'explore',
+      availablePaths,
+      maze: maze.map(row => [...row])
+    });
+    
+    if (row === rows - 1 && col === cols - 1) {
+      found = true;
+      steps.push({
+        position: { row, col },
+        stack: [...stack],
+        action: 'solution',
+        availablePaths: [],
+        maze: maze.map(row => [...row])
+      });
+      return true;
+    }
+    
+    const directions = [[-1, 0], [0, 1], [1, 0], [0, -1]];
+    
+    for (const [dRow, dCol] of directions) {
+      const newRow = row + dRow;
+      const newCol = col + dCol;
+      
+      if (isValid(newRow, newCol)) {
+        if (dfs(newRow, newCol)) {
+          return true;
+        }
+      }
+    }
+    
+    // Backtrack
+    stack.pop();
+    steps.push({
+      position: { row, col },
+      stack: [...stack],
+      action: 'backtrack',
+      availablePaths: [],
+      maze: maze.map(row => [...row])
+    });
+    
+    return false;
+  };
+  
+  dfs(0, 0);
+  
+  return steps;
+};
+
 export const solveMazeWithDFS = async (
   initialMaze: CellType[][],
   setMaze: (maze: CellType[][]) => void,
@@ -76,35 +176,31 @@ export const solveMazeWithDFS = async (
   };
   
   const dfs = async (row: number, col: number): Promise<boolean> => {
-    // Mark as visited
     visited[row][col] = true;
     path.push({ row, col });
     allVisited.push({ row, col });
     
-    // Update visualization
     if (!(row === 0 && col === 0) && !(row === rows - 1 && col === cols - 1)) {
       maze[row][col] = 'visited';
     }
     
-    // Update maze and stats
     setMaze([...maze]);
     setStats({
       pathLength: path.length,
       cellsVisited: allVisited.length,
       backtrackCount,
-      solutionFound: false
+      solutionFound: false,
+      currentStep: 0,
+      totalSteps: 0
     });
     
-    // Add delay for visualization
     await new Promise(resolve => setTimeout(resolve, 50));
     
-    // Check if we reached the end
     if (row === rows - 1 && col === cols - 1) {
       found = true;
       return true;
     }
     
-    // Explore neighbors (up, right, down, left)
     const directions = [[-1, 0], [0, 1], [1, 0], [0, -1]];
     
     for (const [dRow, dCol] of directions) {
@@ -118,16 +214,16 @@ export const solveMazeWithDFS = async (
       }
     }
     
-    // Backtrack
     path.pop();
     backtrackCount++;
     
-    // Update stats during backtracking
     setStats({
       pathLength: path.length,
       cellsVisited: allVisited.length,
       backtrackCount,
-      solutionFound: false
+      solutionFound: false,
+      currentStep: 0,
+      totalSteps: 0
     });
     
     await new Promise(resolve => setTimeout(resolve, 30));
@@ -135,10 +231,8 @@ export const solveMazeWithDFS = async (
     return false;
   };
   
-  // Start DFS from (0, 0)
   await dfs(0, 0);
   
-  // Highlight the solution path
   if (found) {
     for (const pos of path) {
       if (!(pos.row === 0 && pos.col === 0) && !(pos.row === rows - 1 && pos.col === cols - 1)) {
@@ -146,19 +240,19 @@ export const solveMazeWithDFS = async (
       }
     }
     
-    // Mark start and end
     maze[0][0] = 'start';
     maze[rows - 1][cols - 1] = 'end';
     
     setMaze([...maze]);
   }
   
-  // Final stats update
   setStats({
     pathLength: path.length,
     cellsVisited: allVisited.length,
     backtrackCount,
-    solutionFound: found
+    solutionFound: found,
+    currentStep: 0,
+    totalSteps: 0
   });
   
   return {

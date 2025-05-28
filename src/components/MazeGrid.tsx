@@ -33,6 +33,10 @@ export const MazeGrid: React.FC<MazeGridProps> = ({ maze, isAnimating = false })
         return 'bg-purple-500 border border-purple-400';
       case 'current':
         return 'bg-yellow-400 border border-yellow-300 animate-pulse';
+      case 'stack':
+        return 'bg-orange-400 border border-orange-300';
+      case 'decision':
+        return 'bg-pink-400 border border-pink-300 animate-pulse';
       default:
         return 'bg-white border border-gray-200';
     }
