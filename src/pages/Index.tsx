@@ -34,6 +34,7 @@ const Index = () => {
   const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
 
   const handleGenerateNewMaze = useCallback(async () => {
+    console.log('Generating new maze...');
     setIsGenerating(true);
     setStats({ pathLength: 0, cellsVisited: 0, backtrackCount: 0, solutionFound: false, currentStep: 0, totalSteps: 0 });
     setAlgorithmState(prev => ({ ...prev, steps: [], currentStep: 0, isRunning: false }));
@@ -48,6 +49,7 @@ const Index = () => {
     const newMaze = generateMaze(mazeSize.rows, mazeSize.cols);
     setMaze(newMaze);
     setIsGenerating(false);
+    console.log('New maze generated');
   }, [mazeSize, intervalId]);
 
   const handleSolveMaze = useCallback(async () => {
@@ -61,7 +63,10 @@ const Index = () => {
   const handleStepByStepSolve = useCallback(() => {
     if (maze.length === 0) return;
     
+    console.log('Starting step-by-step solve...');
     const steps = generateDFSSteps(maze);
+    console.log('Generated steps:', steps.length);
+    
     setAlgorithmState(prev => ({
       ...prev,
       steps,
@@ -187,6 +192,8 @@ const Index = () => {
   }, [handleGenerateNewMaze]);
 
   const currentStep = algorithmState.steps[algorithmState.currentStep] || null;
+  console.log('Current step in render:', currentStep);
+  console.log('Algorithm state:', algorithmState);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">

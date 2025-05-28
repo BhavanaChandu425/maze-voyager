@@ -15,6 +15,11 @@ export const DFSTraversalLog: React.FC<DFSTraversalLogProps> = ({
   allSteps,
   currentStepIndex
 }) => {
+  // Add debugging
+  console.log('DFSTraversalLog - currentStepIndex:', currentStepIndex);
+  console.log('DFSTraversalLog - allSteps length:', allSteps.length);
+  console.log('DFSTraversalLog - currentStep:', currentStep);
+
   const generateTraversalLog = (): LogEntry[] => {
     const log: LogEntry[] = [];
     
