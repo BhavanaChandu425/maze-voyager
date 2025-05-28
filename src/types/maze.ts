@@ -37,3 +37,9 @@ export interface AlgorithmState {
   steps: DFSStep[];
   speed: number;
 }
+
+export interface LogEntry {
+  message: string;
+  position: Position;
+  type: 'start' | 'visit' | 'backtrack' | 'end' | 'decision';
+}

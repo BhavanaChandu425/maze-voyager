@@ -1,4 +1,3 @@
-
 import React, { useState, useCallback, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,6 +7,7 @@ import { MazeGrid } from '@/components/MazeGrid';
 import { AlgorithmExplanation } from '@/components/AlgorithmExplanation';
 import { MazeStats } from '@/components/MazeStats';
 import { AlgorithmVisualization } from '@/components/AlgorithmVisualization';
+import { DFSTraversalLog } from '@/components/DFSTraversalLog';
 import { generateMaze, solveMazeWithDFS, generateDFSSteps } from '@/utils/mazeUtils';
 import { CellType, Position, MazeStats as MazeStatsType, AlgorithmState, DFSStep } from '@/types/maze';
 
@@ -313,6 +313,15 @@ const Index = () => {
           {/* Statistics and Info */}
           <div className="space-y-6">
             <MazeStats stats={stats} />
+            
+            {algorithmState.steps.length > 0 && (
+              <DFSTraversalLog
+                currentStep={currentStep}
+                allSteps={algorithmState.steps}
+                currentStepIndex={algorithmState.currentStep}
+              />
+            )}
+            
             <AlgorithmExplanation />
           </div>
         </div>
