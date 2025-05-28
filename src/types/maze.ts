@@ -1,5 +1,5 @@
 
-export type CellType = 'wall' | 'path' | 'visited' | 'solution' | 'start' | 'end' | 'current' | 'stack' | 'decision';
+export type CellType = 'wall' | 'path' | 'visited' | 'solution' | 'start' | 'end' | 'current';
 
 export interface Position {
   row: number;
@@ -11,8 +11,6 @@ export interface MazeStats {
   cellsVisited: number;
   backtrackCount: number;
   solutionFound: boolean;
-  currentStep: number;
-  totalSteps: number;
 }
 
 export interface DFSResult {
@@ -20,26 +18,4 @@ export interface DFSResult {
   visitedCells: Position[];
   backtrackCount: number;
   found: boolean;
-}
-
-export interface DFSStep {
-  position: Position;
-  stack: Position[];
-  action: 'explore' | 'backtrack' | 'solution' | 'decision';
-  availablePaths: Position[];
-  maze: CellType[][];
-}
-
-export interface AlgorithmState {
-  isRunning: boolean;
-  isPaused: boolean;
-  currentStep: number;
-  steps: DFSStep[];
-  speed: number;
-}
-
-export interface LogEntry {
-  message: string;
-  position: Position;
-  type: 'start' | 'visit' | 'backtrack' | 'end' | 'decision';
 }
