@@ -1,70 +1,79 @@
-# Welcome to your Lovable project
+# Maze Solving Using DFS
 
-## Project info
+---
 
-**URL**: https://lovable.dev/projects/36781ef3-1168-4e5f-be51-ee769bd9f982
+## 🧑‍💻 Personal Details
 
-## How can I edit this code?
+- **Name:** Chandu Bhavana Sri Sahithi  
+- **USN:** 4NI23CS041  
+- **Branch:** Computer Science  
+- **Semester & Section:** 4th Sem & CSE-A  
+- **Email ID:** 2023cs_chandubhavanasrisahithi_a@nie.ac.in  
+- **Subject:** Discrete Mathematical Structures (BCS405A)  
+- **Project Title:** Maze Solving Using DFS  
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+## 🧩 Maze Solving Using DFS
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/36781ef3-1168-4e5f-be51-ee769bd9f982) and start prompting.
+**Maze Voyager** is a visual and interactive application designed to demonstrate how the **Depth-First Search (DFS)** algorithm can be used to solve mazes. It provides an engaging way to understand pathfinding, graph traversal, and backtracking through a rich visual interface.
 
-Changes made via Lovable will be committed automatically to this repo.
+### 🔍 Key Concepts
 
-**Use your preferred IDE**
+- Depth-First Search (DFS)  
+- Graph Traversal  
+- Backtracking  
+- Maze Representation  
+- Pathfinding Algorithms  
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### ⚙️ Algorithm Execution
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- Step-by-step DFS traversal with animations  
+- Real-time stack visualization  
+- Highlights decision points with multiple path choices  
 
-Follow these steps:
+### 📈 Solution Analysis
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+- Displays the final path from start to goal  
+- Key statistics shown:
+  - Path length  
+  - Total cells visited  
+  - Number of backtracks  
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+---
 
-# Step 3: Install the necessary dependencies.
-npm i
+## 📌 Guidelines
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+To run this project locally:
 
-**Edit a file directly in GitHub**
+1. **Open Terminal / Command Prompt** and navigate to the project directory:
+    ```bash
+    cd maze-voyager-explorer-redux-main
+    ```
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+2. **Install project dependencies:**
+    ```bash
+    npm install
+    ```
 
-**Use GitHub Codespaces**
+3. **(Optional)** Open the project in Visual Studio Code:
+    ```bash
+    code .
+    ```
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+4. **Start the development server:**
+    ```bash
+    npm run dev
+    ```
 
-## What technologies are used for this project?
+5. **Copy the link** (usually http://localhost:5173) and open it in your browser (e.g., Microsoft Edge).
 
-This project is built with:
+6. **Refer to the demo video** uploaded to the Google Form for a working demonstration of the application.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+---
 
-## How can I deploy this project?
+🎉 Happy Exploring!
 
-Simply open [Lovable](https://lovable.dev/projects/36781ef3-1168-4e5f-be51-ee769bd9f982) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
 
 Yes, you can!
 
