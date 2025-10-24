@@ -48,7 +48,7 @@ To run this project locally:
 
 1. **Open Terminal / Command Prompt** and navigate to the project directory:
     ```bash
-    cd maze-voyager-explorer-redux-main
+    cd maze-voyager
     ```
 
 2. **Install project dependencies:**
