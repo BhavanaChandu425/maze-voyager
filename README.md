@@ -68,6 +68,6 @@ To run this project locally:
 
 5. **Copy the link** (usually http://localhost:5173) and open it in your browser (e.g., Microsoft Edge).
 
-6. **Refer to the demo video** uploaded to the Google Form for a working demonstration of the application.
+
 
 ---
