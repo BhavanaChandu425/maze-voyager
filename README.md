@@ -2,18 +2,6 @@
 
 ---
 
-## 🧑‍💻 Personal Details
-
-- **Name:** Chandu Bhavana Sri Sahithi  
-- **USN:** 4NI23CS041  
-- **Branch:** Computer Science  
-- **Semester & Section:** 4th Sem & CSE-A  
-- **Email ID:** 2023cs_chandubhavanasrisahithi_a@nie.ac.in  
-- **Subject:** Discrete Mathematical Structures (BCS405A)  
-- **Project Title:** Maze Solving Using DFS  
-
----
-
 ## 🧩 Maze Solving Using DFS
 
 **Maze Voyager** is a visual and interactive application designed to demonstrate how the **Depth-First Search (DFS)** algorithm can be used to solve mazes. It provides an engaging way to understand pathfinding, graph traversal, and backtracking through a rich visual interface.
